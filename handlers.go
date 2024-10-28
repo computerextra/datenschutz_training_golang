@@ -1,12 +1,12 @@
 package main
 
 import (
-	"app/db"
-	"app/helpers"
-	"app/models"
 	"net/http"
 	"strconv"
 
+	"github.com/computerextra/datenschutz_training_golang/db"
+	"github.com/computerextra/datenschutz_training_golang/helpers"
+	"github.com/computerextra/datenschutz_training_golang/models"
 	"github.com/gin-gonic/gin"
 )
 

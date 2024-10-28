@@ -1,10 +1,11 @@
 package helpers
 
 import (
-	"app/db"
-	"app/models"
 	"crypto/rand"
 	"math/big"
+
+	"github.com/computerextra/datenschutz_training_golang/db"
+	"github.com/computerextra/datenschutz_training_golang/models"
 )
 
 var chars = []string{

@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/computerextra/datenschutz_training_golang/models"
 	"github.com/gin-gonic/gin"
 	"github.com/ulule/limiter/v3"
 	mgin "github.com/ulule/limiter/v3/drivers/middleware/gin"

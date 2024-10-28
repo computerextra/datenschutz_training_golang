@@ -1,6 +1,6 @@
 package models
 
-import "app/db"
+import "github.com/computerextra/datenschutz_training_golang/db"
 
 type List struct {
 	ID  uint   `gorm:"primaryKey"`
