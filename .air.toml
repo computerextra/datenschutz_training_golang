@@ -3,14 +3,16 @@ tmp_dir = "tmp"
 
 [build]
 # MacOS / Linux
-# bin = "./tmp/main"
+bin = "./tmp/main"
 # Windows
-bin = "tmp\\main.exe"
+# bin = "tmp\\main.exe"
 # MacOS / Linux
 # cmd = "go build -o ./tmp/main ."
 # Windows
 # cmd = "go build -o ./tmp/main.exe ."
-cmd = "cd ./static/content && bunx tailwindcss -i ./../../web/input.css -o ./dist/output.css && cd ./../../ && templ generate && go build -o ./tmp/main.exe ."
+# cmd = "cd ./static/content && bunx tailwindcss -i ./../../web/input.css -o ./dist/output.css && cd ./../../ && templ generate && go build -o ./tmp/main.exe ."
+# MacOS / Linux
+cmd = "cd ./static/content && bunx tailwindcss -i ./../../web/input.css -o ./dist/output.css && cd ./../../ && templ generate && go build -o ./tmp/main ."
 delay = 1000
 exclude_dir = ["assets", "tmp", "vendor"]
 exclude_file = []
