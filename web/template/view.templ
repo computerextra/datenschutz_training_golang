@@ -34,11 +34,16 @@ templ Page() {
 						hx-target="#search-results"
 						hx-indicator=".htmx-indicator"
 					/>
-					<button class="btn join-item" hx-get="/book/add" hx-target="#book-display" hx-indicator=".htmx-indicator">Add Book</button>
+					<button
+						class="btn join-item"
+						hx-get="/book/add"
+						hx-target="#book-display"
+						hx-indicator=".htmx-indicator"
+					>Add Book</button>
 				</div>
 				<div class="label">
 					<span class="htmx-indicator label-text-alt">
-						Loading... 
+						Loading...
 					</span>
 				</div>
 				<div id="search-results"></div>
@@ -59,7 +64,12 @@ templ Results(books []db.Book) {
 			</thead>
 			<tbody>
 				for _, book := range books {
-					<tr class="hover" hx-get={ "/book/" + strconv.FormatUint(uint64(book.ID), 10) } hx-target="#book-display" hx-indicator=".htmx-indicator">
+					<tr
+						class="hover"
+						hx-get={ "/book/" + strconv.FormatUint(uint64(book.ID), 10) }
+						hx-target="#book-display"
+						hx-indicator=".htmx-indicator"
+					>
 						<td>{ strconv.FormatUint(uint64(book.ID), 10) }</td>
 						<td>{ book.Title }</td>
 					</tr>
@@ -85,10 +95,21 @@ templ AddBook(book *db.Book) {
 
 templ EditBook(book *db.Book) {
 	<div id="book-display" class="h-fit">
-		<form hx-put={ "/book/" + strconv.FormatUint(uint64(book.ID), 10) } hx-target="#book-display" hx-indicator=".htmx-indicator">
+		<form
+			hx-put={ "/book/" + strconv.FormatUint(uint64(book.ID), 10) }
+			hx-target="#book-display"
+			hx-indicator=".htmx-indicator"
+		>
 			@BookView(*book)
 			<button class="btn btn-outline btn-primary mt-2" type="submit">Submit</button>
-			<button class="btn btn-outline btn-danger mt-2" type="button" hx-Delete={ "/book/" + strconv.FormatUint(uint64(book.ID), 10) } hx-target="#book-display" hx-indicator=".htmx-indicator">Delete</button>
+			<button
+				class="btn btn-outline btn-danger mt-2"
+				type="button"
+				hx-Delete={ "/book/" +
+			strconv.FormatUint(uint64(book.ID), 10) }
+				hx-target="#book-display"
+				hx-indicator=".htmx-indicator"
+			>Delete</button>
 		</form>
 	</div>
 }
@@ -98,13 +119,7 @@ templ BookView(book db.Book) {
 		<div class="label">
 			<span class="label-text">Title</span>
 		</div>
-		<input
-			name="title"
-			class="input input-bordered w-full"
-			type="text"
-			placeholder="Title"
-			value={ book.Title }
-		/>
+		<input name="title" class="input input-bordered w-full" type="text" placeholder="Title" value={ book.Title }/>
 	</label>
 	<label class="form-control w-full" for="search">
 		<div class="label">
@@ -123,13 +138,7 @@ templ BookView(book db.Book) {
 		<div class="label">
 			<span class="label-text">Author</span>
 		</div>
-		<input
-			name="author"
-			class="input input-bordered w-full"
-			type="text"
-			placeholder="Author"
-			value={ book.Author }
-		/>
+		<input name="author" class="input input-bordered w-full" type="text" placeholder="Author" value={ book.Author }/>
 	</label>
 	<label class="form-control w-full" for="search">
 		<div class="label">
