@@ -1,19 +1,60 @@
 # Datenschutz Training
 
-inspired by [https://github.com/nwrenger/htmx-gorm-gin/blob/main/main.go](https://github.com/nwrenger/htmx-gorm-gin/blob/main/main.go)
-
 ## Features
 
-- **RESTful API:** Built on the principles of Representational State Transfer (REST) for efficient and standardized communication.
-- **SQLite Database:** Utilizes a SQLite database for data storage, providing a simple and self-contained solution.
+- [x] [Echo Webserver](https://echo.labstack.com)
+- [x] [Templ](https://templ.guide)
+- [x] [Gorilla Sessions](https://gorilla.github.io)
+- [x] [Ent ORM](https://entgo.io/docs/getting-started)
+- [x] [HotWire](https://hotwired.dev)
+- [x] [TailwindCSS](https://tailwindcss.com)
 
-## Usage
+Lesen:
+https://www.akmittal.dev/posts/hotwire-go/
+https://adrianhesketh.com/2021/06/04/hotwired-go-with-templ/
 
-- **Install Perquisites:** You have to have [go](https://go.dev/), [air](https://github.com/cosmtrek/air) and [bun](https://bun.sh/) installed.
-- **Install Dependencies:** Install dependencies of go (in [root](/)) and bun (in [content](static/content/)).
-- **Run Dev:** Finally, You have to use the `air` command, it's pre-configured in the [air-toml](.air.toml).
-- **Build:** To build the project you have to run the following command, **make sure to include in your export the static files**:
+## Database
 
-```sh
-cd ./static/content && bunx tailwindcss -i ./../../web/input.css -o ./dist/output.css && cd ./../../ && templ generate && go build .
+### Create Schema
+
+```bash
+go run -mod=mod entgo.io/ent/cmd/ent new User
+```
+
+### Create Edge (Relation)
+
+```bash
+go run -mod=mod entgo.io/ent/cmd/ent new Car Group
+```
+
+### Generate Schema
+
+```bash
+go generate ./ent
+```
+
+### Inspect The Ent Schema
+
+```bash
+atlas schema inspect \
+  -u "ent://ent/schema" \
+  --dev-url "sqlite://file?mode=memory&_fk=1" \
+  -w
+```
+
+### Generating migrations
+
+```bash
+atlas migrate diff migration_name \
+  --dir "file://ent/migrate/migrations" \
+  --to "ent://ent/schema" \
+  --dev-url "sqlite://file?mode=memory&_fk=1"
+```
+
+### Applying migrations
+
+```bash
+atlas migrate apply \
+  --dir "file://ent/migrate/migrations" \
+  --url "sqlite://file.db?_fk=1"
 ```

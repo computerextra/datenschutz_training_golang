@@ -1,55 +1,142 @@
 package main
 
 import (
+	"io"
 	"net/http"
+	"os"
 
-	"github.com/computerextra/datenschutz_training_golang/api"
-	"github.com/computerextra/datenschutz_training_golang/db"
-	"github.com/computerextra/datenschutz_training_golang/web"
-	"github.com/computerextra/datenschutz_training_golang/web/template"
-	"github.com/gin-gonic/gin"
+	routes "github.com/computerextra/datenschutz_training_golang/Routes"
+	templates "github.com/computerextra/datenschutz_training_golang/Templates"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
-func main() {
-	err := db.Open()
+// Handling Request
+type User struct {
+	Name  string `json:"name" xml:"name" form:"name" query:"name"`
+	Email string `json:"email" xml:"email" form:"email" query:"email"`
+}
 
+// Cookies
+// https://echo.labstack.com/docs/cookies
+
+func main() {
+	e := echo.New()
+
+	// Auto TLS
+	// e.AutoTLSManager.HostPolicy = autocert.HostWhitelist("johanneskirchner.net")
+	// Cache Certificate to avaid issues with rate Limits (https://letsencrypt.org/docs/rate-limits)
+	// e.AutoTLSManager.Cache = autocert.DirCache("/var/www/.cache")
+
+	// Remove trailing slash
+	e.Pre(middleware.RemoveTrailingSlash())
+
+	// Middleware
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	// Sessions
+	routes.Session(e)
+
+	routes.AdminRoutes(e)
+
+	// Route Level Middleware
+	track := func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			println("request to /users")
+			return next(c)
+		}
+	}
+	e.GET("/users", func(c echo.Context) error {
+		return c.String(http.StatusOK, "/users")
+	}, track)
+
+	// Serve Static Files
+	// Serve any file from static directory for path /static/*.
+	e.Static("/static", "static")
+
+	e.GET("/", func(c echo.Context) error {
+		return templates.Render(c, http.StatusOK, templates.Home())
+	})
+	// Query Parameters
+	e.GET("/show", show)
+
+	// Form application/x-www-form-urlencoded
+	e.POST("/save", save)
+
+	// Routing
+	// Handling Request
+	e.POST("/users", func(c echo.Context) error {
+		u := new(User)
+		if err := c.Bind(u); err != nil {
+			return err
+		}
+		return c.JSON(http.StatusCreated, u)
+		// or
+		// return c.XML(http.StatusCreated, u)
+	})
+	e.GET("/users/:id", getUser)
+	// e.PUT("/users/:id", updateUser)
+	// e.DELETE("/users/:id", deleteUser)
+
+	e.Logger.Fatal(e.Start(":8080"))
+	// Auto TLS
+	// e.Logger.Fatal(e.StartAutoTLS(":443"))
+}
+
+// Path Parameters
+// e.GET("/users/:id", getUser)
+func getUser(c echo.Context) error {
+	// User ID from path `users/:id`
+	id := c.Param("id")
+	return c.String(http.StatusOK, id)
+}
+
+// Query Parameters
+func show(c echo.Context) error {
+	// Get team and Member from the querystring
+	team := c.QueryParam("team")
+	member := c.QueryParam("member")
+	return c.String(http.StatusOK, "team: "+team+", member:"+member)
+}
+
+// Form application/x-www-form-urlencoded
+func save(c echo.Context) error {
+	// Get name and email
+	name := c.FormValue("name")
+	email := c.FormValue("email")
+	return c.String(http.StatusOK, "name: "+name+", email: "+email)
+}
+
+// Form multipart/form-data
+func saveForm(c echo.Context) error {
+	// Get name
+	name := c.FormValue("name")
+	// Get Avatar
+	avatar, err := c.FormFile("avatar")
 	if err != nil {
-		println("Error:", err)
+		return err
 	}
 
-	// adding Admin, ignore error
-	db.AddOrUpdateLogin(&db.Login{
-		User:     "admin",
-		Password: "password1",
-		Permission: db.Permissions{
-			AccessAdmin: db.Write,
-			AccessBook:  db.Write,
-		},
-	})
+	// Source
+	src, err := avatar.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
 
-	router := gin.Default()
-	router.HTMLRender = &template.TemplRender{}
+	// Destination
+	dst, err := os.Create(avatar.Filename)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
 
-	// Serve Files
-	router.Static("/static", "./static")
-	router.StaticFile("/favicon.ico", "./static/favicon.ico")
+	// Copy
+	if _, err = io.Copy(dst, src); err != nil {
+		return err
+	}
 
-	// web
-	router.GET("/", func(c *gin.Context) { c.HTML(http.StatusOK, "", template.Page()) })
-	router.POST("/search", web.Search)
-	router.GET("/book/add", web.ShowAddBook)
-	router.GET("/book/:id", web.ShowEditBook)
-	router.POST("/book", web.AddBook)
-	router.PUT("/book/:id", web.EditBook)
-	router.DELETE("/book/:id", web.DeleteBook)
+	return c.HTML(http.StatusOK, "<b>Thank You! "+name+"</b>")
 
-	// api
-	router.GET("/api/books", api.AuthMiddleware(api.BookReadOnly), api.GetBooks)
-	router.GET("/api/book/:id", api.AuthMiddleware(api.BookReadOnly), api.GetBookById)
-	router.POST("/api/book", api.AuthMiddleware(api.BookWrite), api.PostBook)
-	router.DELETE("/api/book/:id", api.AuthMiddleware(api.BookWrite), api.DeleteBook)
-
-	router.POST("/api/login", api.AuthMiddleware(api.LoginWrite), api.PostLogin)
-
-	router.Run("localhost:8080")
 }

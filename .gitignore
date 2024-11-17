@@ -1,5 +1,16 @@
 /tmp
-/web/template/*_templ.go
+/Templates/**/*_templ.go
 
 .env
-database.db
+
+/node_modules
+/static/style.css
+
+/ent/*
+!/ent/schema/
+!/ent/generate.go
+!/ent/migrate/
+/ent/migrate/*.go
+
+# Database
+file.db

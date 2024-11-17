@@ -1,0 +1,11 @@
+package templates
+
+import layout "github.com/computerextra/datenschutz_training_golang/Templates/Layout"
+
+templ Home() {
+	@layout.Base("Startseite") {
+		<div>
+			Hello World!
+		</div>
+	}
+}
