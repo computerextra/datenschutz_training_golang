@@ -12,7 +12,7 @@ bin = "./tmp/main"
 # MacOS / Linux
 cmd = "bunx tailwindcss -i ./base.css -o ./static/style.css && templ generate && go generate ./ent &&  go build -o ./tmp/main ."
 delay = 1000
-exclude_dir = ["assets", "tmp", "vendor"]
+exclude_dir = ["assets", "tmp", "vendor", "ent"]
 exclude_file = []
 exclude_regex = [".*_templ.go"]
 exclude_unchanged = false

@@ -1,0 +1,22 @@
+package layout
+
+import components "github.com/computerextra/datenschutz_training_golang/Templates/Components"
+
+templ MainMenu() {
+	<nav class="container mx-auto">
+		<ul class="flex flex-row gap-4">
+			<li>
+				@components.NavLink("/", "Startseite")
+			</li>
+			<li>
+				@components.NavLink("/users", "Users")
+			</li>
+			<li>
+				@components.NavLink("/cars", "Cars")
+			</li>
+			<li>
+				@components.NavLink("/groups", "Groups")
+			</li>
+		</ul>
+	</nav>
+}
