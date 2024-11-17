@@ -2,11 +2,11 @@
 
 Using the all new SHEET Stack.
 
-- <b>S</b>essions (Gorilla Sessions)
-- <b>H</b>otwire / Turbo
-- <b>E</b>cho Webframework
-- <b>E</b>nt ORM
-- <b>T</b>empl and TailwindCSS
+- **_S_**essions (Gorilla Sessions)
+- **_H_**otwire / Turbo
+- **_E_**cho Webframework
+- **_E_**nt ORM
+- **_T_**empl and TailwindCSS
 
 ## Features
 
