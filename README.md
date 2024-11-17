@@ -1,5 +1,13 @@
 # Datenschutz Training
 
+Using the all new SHEET Stack.
+
+- <b>S</b>essions (Gorilla Sessions)
+- <b>H</b>otwire / Turbo
+- <b>E</b>cho Webframework
+- <b>E</b>nt ORM
+- <b>T</b>empl and TailwindCSS
+
 ## Features
 
 - [x] [Echo Webserver](https://echo.labstack.com)
