@@ -47,9 +47,9 @@ func CreateUser(ctx context.Context, client *ent.Client) (*ent.User, error) {
 	return u, nil
 }
 
-func QueryUser(ctx context.Context, client *ent.Client) (*ent.User, error) {
+func QueryUser(ctx context.Context, client *ent.Client, username string) (*ent.User, error) {
 	// 'Only' fails if no user found, or more than one user returned
-	u, err := client.User.Query().Where(user.Name("a8m")).Only(ctx)
+	u, err := client.User.Query().Where(user.Name(username)).Only(ctx)
 	if err != nil {
 		return nil, fmt.Errorf("files querying user: %w", err)
 	}

@@ -11,6 +11,11 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
+type Link struct {
+	Name string
+	Url  string
+}
+
 // Handling Request
 type User struct {
 	Name  string `json:"name" xml:"name" form:"name" query:"name"`
@@ -56,6 +61,7 @@ func main() {
 	e.Static("/static", "static")
 
 	e.GET("/", func(c echo.Context) error {
+
 		return templates.Render(c, http.StatusOK, templates.Home())
 	})
 	// Query Parameters
