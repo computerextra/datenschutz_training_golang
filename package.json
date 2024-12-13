@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@hotwired/turbo": "^8.0.12",
-    "tailwindcss": "^3.4.15"
-  }
-}
