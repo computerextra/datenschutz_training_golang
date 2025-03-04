@@ -5,19 +5,22 @@ import (
 	"net/http"
 
 	"computerextra/datenschutz_training_golang/db"
+	"computerextra/datenschutz_training_golang/internal/service/realip"
 
 	"github.com/a-h/templ"
 )
 
 type Handler struct {
-	logger   *slog.Logger
-	database *db.PrismaClient
+	logger     *slog.Logger
+	database   *db.PrismaClient
+	ipResolver *realip.Service
 }
 
-func New(logger *slog.Logger, database *db.PrismaClient) *Handler {
+func New(logger *slog.Logger, database *db.PrismaClient, ipService *realip.Service) *Handler {
 	return &Handler{
-		logger:   logger,
-		database: database,
+		logger:     logger,
+		database:   database,
+		ipResolver: ipService,
 	}
 }
 

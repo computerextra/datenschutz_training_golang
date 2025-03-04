@@ -3,6 +3,9 @@ package app
 import (
 	"computerextra/datenschutz_training_golang/db"
 	"computerextra/datenschutz_training_golang/internal/middleware"
+	"computerextra/datenschutz_training_golang/internal/service/realip"
+	"computerextra/datenschutz_training_golang/internal/utils/flash"
+
 	"context"
 	"errors"
 	"fmt"
@@ -15,10 +18,11 @@ import (
 )
 
 type App struct {
-	config   Config
-	files    fs.FS
-	logger   *slog.Logger
-	database *db.PrismaClient
+	config     Config
+	files      fs.FS
+	logger     *slog.Logger
+	database   *db.PrismaClient
+	ipresolver *realip.Service
 }
 
 func New(logger *slog.Logger, config Config, files fs.FS) (*App, error) {
@@ -27,10 +31,11 @@ func New(logger *slog.Logger, config Config, files fs.FS) (*App, error) {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
 	}
 	return &App{
-		config:   config,
-		logger:   logger,
-		files:    files,
-		database: client,
+		config:     config,
+		logger:     logger,
+		files:      files,
+		database:   client,
+		ipresolver: realip.New(realip.LastXFFIPResolver),
 	}, nil
 }
 
@@ -44,7 +49,9 @@ func (a *App) Start(ctx context.Context) error {
 	}
 
 	middlewares := middleware.Chain(
+		a.ipresolver.Middleware(),
 		middleware.Logging(a.logger),
+		flash.Middleware,
 	)
 
 	srv := &http.Server{

@@ -11,7 +11,7 @@ import (
 )
 
 func (a *App) LoadPages(router *http.ServeMux) {
-	// h := handler.New(a.logger, a.database)
+	// h := handler.New(a.logger, a.database, a.ipresolver)
 
 	router.Handle("GET /{$}", handler.Component(component.Index()))
 
