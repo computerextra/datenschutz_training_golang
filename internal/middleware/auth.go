@@ -9,7 +9,6 @@ import (
 func NeedAuth(store *sessions.CookieStore, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !hasAcceptedCookies(r) {
-			// TODO: Show Cookie Banner
 			http.Error(w, "Cookies müssen akzeptiert werden", http.StatusForbidden)
 			return
 		}

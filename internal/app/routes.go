@@ -16,11 +16,11 @@ func (a *App) LoadPages(router *http.ServeMux) {
 
 	router.Handle("GET /{$}", handler.Component(component.Index()))
 
-	// Catch the Rest
-	router.Handle("GET /", handler.Component(component.NotFound()))
-
 	// Protected
 	router.Handle("GET /prot", a.auth(h.Test))
+
+	// Catch the Rest
+	router.Handle("GET /", handler.Component(component.NotFound()))
 }
 
 func (a *App) auth(next func(http.ResponseWriter, *http.Request)) http.Handler {
