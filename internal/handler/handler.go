@@ -9,19 +9,22 @@ import (
 	"computerextra/datenschutz_training_golang/internal/service/realip"
 
 	"github.com/a-h/templ"
+	"github.com/gorilla/sessions"
 )
 
 type Handler struct {
 	logger     *slog.Logger
 	database   *db.PrismaClient
 	ipResolver *realip.Service
+	store      *sessions.CookieStore
 }
 
-func New(logger *slog.Logger, database *db.PrismaClient, ipService *realip.Service) *Handler {
+func New(logger *slog.Logger, database *db.PrismaClient, ipService *realip.Service, store *sessions.CookieStore) *Handler {
 	return &Handler{
 		logger:     logger,
 		database:   database,
 		ipResolver: ipService,
+		store:      store,
 	}
 }
 
