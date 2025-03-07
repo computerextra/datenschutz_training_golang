@@ -14,7 +14,16 @@ import (
 func (a *App) LoadPages(router *http.ServeMux) {
 	h := handler.New(a.logger, a.database, a.ipresolver, a.store)
 
-	router.Handle("GET /{$}", handler.Component(component.Index()))
+	router.Handle("GET /{$}", handler.ComponentWithContext(component.Index(), a.store))
+
+	// Auth
+	router.Handle("GET /signIn", handler.Component(component.SignIn()))
+	router.HandleFunc("POST /signIn", h.Login)
+	router.Handle("GET /signUp", handler.Component(component.SignUp()))
+	router.HandleFunc("POST /signUp", h.Register)
+	router.Handle("GET /signOut", a.auth(h.Logout))
+	router.Handle("GET /loggedOut", handler.Component(component.LogOut()))
+	router.HandleFunc("GET /verify", h.Verify)
 
 	// Protected
 	router.Handle("GET /prot", a.auth(h.Test))

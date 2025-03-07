@@ -1,0 +1,125 @@
+package component
+
+templ SignUp() {
+	@Page("Registrieren | ") {
+		<form method="post" class="mt-5 space-y-4">
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Wie ist dein Name?</legend>
+				<input
+					type="text"
+					class="input"
+					name="name"
+					id="name"
+					placeholder="Tippe hier"
+					required
+				/>
+			</fieldset>
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">wie ist deine E-Mail Adresse?</legend>
+				<input
+					type="email"
+					name="mail"
+					id="mail"
+					class="input validator"
+					placeholder="mail@site.com"
+					required
+				/>
+				<div class="validator-hint">Bitte gib eine gültige E-Mail-Adresse ein!</div>
+			</fieldset>
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Vergib ein Passwort</legend>
+				<input
+					type="password"
+					class="input validator"
+					placeholder="Passwort"
+					required
+					name="password"
+					id="password"
+					minlength="8"
+					pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}"
+					title="Muss mindestens 8 Zeichen lang sein. Muss Nummern, kleine und große Buchstaben enthalten."
+				/>
+				<p class="validator-hint">
+					Muss länger als 8 Zeichen sein.
+					<br/>
+					Muss mindestens 1 Zahl enthalten.
+					<br/>
+					Muss mindestens 1 Kleinbuchstaben enthalten.
+					<br/>
+					Muss mindestens 1 Großbuchstaben enthalten.
+				</p>
+			</fieldset>
+			<fieldset class="fieldset p-4 bg-base-100 border border-base-300 rounded-box w-120">
+				<legend class="fieldset-legend">Datenschutz</legend>
+				<label class="fieldset-label">
+					<input type="checkbox" class="checkbox validator" required title="Required"/>
+					<p class="validator-hint">Erforderlich</p>
+					// TODO: Text hierfür schreiben
+					Datenschutz...
+				</label>
+			</fieldset>
+			<input type="submit" value="Registrieren" class="btn btn-neutral"/>
+		</form>
+	}
+}
+
+templ SignIn() {
+	@Page("Anmelden | ") {
+		<form method="post" class="mt-5 space-y-4">
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Deine E-Mail Adresse</legend>
+				<input type="email" name="mail" id="mail" class="input validator" placeholder="mail@site.com" required/>
+				<div class="validator-hint">Bitte gib eine gültige E-Mail-Adresse ein!</div>
+			</fieldset>
+			<fieldset class="fieldset">
+				<legend class="fieldset-legend">Dein Passwort</legend>
+				<input
+					type="password"
+					name="password"
+					id="password"
+					placeholder="Passwort"
+					class="input"
+					required
+				/>
+			</fieldset>
+			<input type="submit" value="Anmelden" class="btn btn-neutral"/>
+			<p>
+				Noch keinen Account? <a href="/signUp" class="text-primary underline">hier Registrieren</a>
+			</p>
+		</form>
+	}
+}
+
+templ LogOut() {
+	@Page("Abgemeldet | ") {
+		<div className="card card-border bg-base-100 w-96">
+			<div className="card-body">
+				<h2 className="card-title">Abgemeldet</h2>
+				<p>Du hast dich erfolgreich abgemeldet</p>
+			</div>
+		</div>
+	}
+}
+
+templ Verify(verified bool) {
+	@Page("Verifikation | ") {
+		if verified {
+			<div className="card card-border bg-base-100 w-96">
+				<div className="card-body">
+					<h2 className="card-title">Erfolg</h2>
+					<p>Deine E-Mail Adresse ist verifiziert.</p>
+					<p>Du kannst dich nun <a href="/signIn" class="underline text-primary">anmelden</a></p>
+				</div>
+			</div>
+		} else {
+			<div className="card card-border bg-base-100 w-96">
+				<div className="card-body">
+					<h2 className="card-title">Verifiziere deine E-Mail-Adresse</h2>
+					<p>Bitte verifiziere deine E-Mail Adreese</p>
+					<p>Eine E-Mail wurde an deine angegebene Adresse geschickt.</p>
+					<p>Falls du keine E-Mail erhalten hast, wende ich bitte an Johannes Kirchner</p>
+				</div>
+			</div>
+		}
+	}
+}

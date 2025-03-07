@@ -1,5 +1,7 @@
 package component
 
+import "context"
+
 templ Page(title string) {
 	<html lang="de" class="font-geist">
 		<head>
@@ -70,7 +72,7 @@ templ Page(title string) {
 templ navigation() {
 	<div class="shadow-sm navbar bg-base-100 print:!hidden">
 		<div class="flex-1">
-			<a href="/" class="text-xl btn btn-ghost">Viktor</a>
+			<a href="/" class="text-xl btn btn-ghost">Datenschutz Training</a>
 		</div>
 		<div class="flex-none">
 			@NavLink()
@@ -145,6 +147,14 @@ templ NavLink() {
 		<li><a href="/Kunde">Kundensuche</a></li>
 		<li><a href="/Inventur">Inventur</a></li>
 		<li><a href="/Werkstatt">Werkstatt</a></li>
+		{{	
+			auth := GetAuth(ctx)
+		}}
+		if auth {
+			<li><a href="/signOut">Abmelden</a></li>
+		} else {
+			<li><a href="/signIn">Anmelden</a></li>
+		}
 	</ul>
 }
 
@@ -152,4 +162,11 @@ templ Backbutton(href string) {
 	<a href={ templ.URL(href) } class="btn btn-secondary mb-2 print:hidden">
 		Zurück
 	</a>
+}
+
+func GetAuth(ctx context.Context) bool {
+	// TODO: Context ist nicht da!
+	auth, ok := ctx.Value("auth").(bool)
+
+	return ok && auth
 }
