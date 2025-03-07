@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"log/slog"
 	"net/http"
 
@@ -29,4 +30,17 @@ func Component(comp templ.Component) http.Handler {
 		w.Header().Add("Content-Type", "text/html")
 		comp.Render(r.Context(), w)
 	})
+}
+
+func (h *Handler) Test(w http.ResponseWriter, r *http.Request) {
+
+	host := r.Host
+	scheme := "http"
+	if r.TLS != nil {
+		scheme = "https"
+	}
+
+	uri := fmt.Sprintf("%s://%s", scheme, host)
+
+	http.Redirect(w, r, uri, http.StatusFound)
 }

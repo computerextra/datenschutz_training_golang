@@ -3,6 +3,7 @@ package app
 import (
 	"computerextra/datenschutz_training_golang/internal/component"
 	"computerextra/datenschutz_training_golang/internal/handler"
+	"computerextra/datenschutz_training_golang/internal/middleware"
 
 	"fmt"
 	"io/fs"
@@ -11,12 +12,19 @@ import (
 )
 
 func (a *App) LoadPages(router *http.ServeMux) {
-	// h := handler.New(a.logger, a.database, a.ipresolver)
+	h := handler.New(a.logger, a.database, a.ipresolver)
 
 	router.Handle("GET /{$}", handler.Component(component.Index()))
 
 	// Catch the Rest
 	router.Handle("GET /", handler.Component(component.NotFound()))
+
+	// Protected
+	router.Handle("GET /prot", a.auth(h.Test))
+}
+
+func (a *App) auth(next func(http.ResponseWriter, *http.Request)) http.Handler {
+	return middleware.NeedAuth(a.store, http.HandlerFunc(next))
 }
 
 func (a *App) loadStaticFiles() (http.Handler, error) {

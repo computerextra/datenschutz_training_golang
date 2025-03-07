@@ -15,6 +15,8 @@ import (
 	"os"
 	"strconv"
 	"time"
+
+	"github.com/gorilla/sessions"
 )
 
 type App struct {
@@ -22,10 +24,11 @@ type App struct {
 	files      fs.FS
 	logger     *slog.Logger
 	database   *db.PrismaClient
+	store      *sessions.CookieStore
 	ipresolver *realip.Service
 }
 
-func New(logger *slog.Logger, config Config, files fs.FS) (*App, error) {
+func New(logger *slog.Logger, config Config, files fs.FS, store *sessions.CookieStore) (*App, error) {
 	client := db.NewClient()
 	if err := client.Prisma.Connect(); err != nil {
 		return nil, fmt.Errorf("failed to connect to database: %w", err)
@@ -35,6 +38,7 @@ func New(logger *slog.Logger, config Config, files fs.FS) (*App, error) {
 		logger:     logger,
 		files:      files,
 		database:   client,
+		store:      store,
 		ipresolver: realip.New(realip.LastXFFIPResolver),
 	}, nil
 }

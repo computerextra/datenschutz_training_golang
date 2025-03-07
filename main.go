@@ -8,10 +8,12 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/gorilla/sessions"
 	"github.com/joho/godotenv"
 )
 
 var files embed.FS
+var store = sessions.NewCookieStore([]byte("super-secret-key"))
 
 func main() {
 	godotenv.Load()
@@ -21,7 +23,7 @@ func main() {
 	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer cancel()
 
-	app, err := app.New(logger, app.Config{}, files)
+	app, err := app.New(logger, app.Config{}, files, store)
 	if err != nil {
 		logger.Error("failed to create app", slog.Any("error", err))
 	}
