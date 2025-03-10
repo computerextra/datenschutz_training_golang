@@ -11,6 +11,8 @@ templ Page(title string) {
 			<link href="/static/css/style.css" rel="stylesheet"/>
 			<script src="/static/js/htmx.js"></script>
 			<script src="/static/js/theme-change.js"></script>
+			<script src="/static/js/dropdown.js"></script>
+			<script src="/static/js/cookie.js"></script>
 			<title>{ title }Datenschutz Training</title>
 		</head>
 		<body class="bg-base-100 text-base-content min-h-[100vh] antialiased">
@@ -23,48 +25,6 @@ templ Page(title string) {
 					<button id="accept-cookies">Akzeptieren</button>
 				</div>
 			</div>
-			<script>
-				window.addEventListener("click", function(e) {
-					document.querySelectorAll(".dropdown").forEach(function(dropdown) {
-						dropdown.open = false
-					})
-				})
-
-				document.addEventListener("DOMContentLoaded", function() {
-					const banner = document.getElementById("cookie-banner")
-					const accept_btn = document.getElementById("accept-cookies")
-					if (!getCookie("cookies_accepted")) {
-						banner.style.display = "block"
-					}
-
-					accept_btn.addEventListener("click", function() {
-						setCookie("cookies_accepted", "true", 365)
-						banner.style.display = "none"
-					})
-				})
-
-				function setCookie(name, value, days) {
-					var expires = ""
-					if (days) {
-						var date = new Date()
-						date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000))
-						expires = "; expires=" + date.toUTCString()
-					}
-					document.cookie = name + "=" + (value || "") + expires + "; path=/"
-				}
-
-				function getCookie(name) {
-					var nameEQ = name + "="
-					var ca = document.cookie.split(";")
-					for (let i = 0; i < ca.length; i++) {
-						var c = ca[i]
-						while (c.charAt(0) == " ") c = c.substring(1, c.length)
-						if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length)
-					}
-					return null
-				}
-
-			</script>
 		</body>
 	</html>
 }
