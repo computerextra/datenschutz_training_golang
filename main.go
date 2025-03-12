@@ -12,8 +12,10 @@ import (
 	"github.com/joho/godotenv"
 )
 
-var files embed.FS
-var store = sessions.NewCookieStore([]byte("super-secret-key"))
+var (
+	files embed.FS
+	store = sessions.NewCookieStore([]byte("super-secret-key"))
+)
 
 func main() {
 	godotenv.Load()
